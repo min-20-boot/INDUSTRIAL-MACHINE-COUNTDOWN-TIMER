@@ -52,3 +52,22 @@ int main(void) {
         }
     }
 }
+void GPIO_Init(void) {
+    // Enable Clocks: Port A, B, and C
+    RCC->AHB1ENR |= (RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOBEN | RCC_AHB1ENR_GPIOCEN);
+
+    // PA2 & PA3 (SW1, SW2) as Inputs with Pull-up
+    GPIOA->MODER &= ~(GPIO_MODER_MODER2 | GPIO_MODER_MODER3);
+    GPIOA->PUPDR |= (GPIO_PUPDR_PUPDR2_0 | GPIO_PUPDR_PUPDR3_0);
+
+    // PB0 (SW3) as Input with Pull-up
+    GPIOB->MODER &= ~(GPIO_MODER_MODER0);
+    GPIOB->PUPDR |= (GPIO_PUPDR_PUPDR0_0);
+
+    // PC0-PC15 as Outputs for Displays
+    GPIOC->MODER = 0x55555555; 
+
+    // PB12 as Output for LED
+    GPIOB->MODER &= ~(GPIO_MODER_MODER12);
+    GPIOB->MODER |= (GPIO_MODER_MODER12_0);
+}
